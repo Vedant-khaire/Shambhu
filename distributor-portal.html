@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distributor Portal | Shambhu — Premium Office Files</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/global.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<script>
+  // Protect page immediately
+  (function() {
+    const distUser = localStorage.getItem('shambhu_dist_user');
+    const expiry = localStorage.getItem('shambhu_dist_expiry');
+    if (!distUser || !expiry || new Date().getTime() > parseInt(expiry)) {
+      localStorage.removeItem('shambhu_dist_user');
+      localStorage.removeItem('shambhu_dist_expiry');
+      window.location.href = 'distributor.html?auth=failed';
+    }
+  })();
+</script>
+<style>
+  .portal-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 140px 6% 60px;
+  }
+  .portal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+  }
+  .wholesale-badge {
+    background: rgba(200, 149, 26, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(200, 149, 26, 0.3);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .price-block {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .retail-price {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.4);
+    text-decoration: line-through;
+  }
+  .wholesale-price {
+    font-size: 1.4rem;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+  .order-btn {
+    background: #25D366;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background 0.2s;
+  }
+  .order-btn:hover { background: #1da555; }
+</style>
+</head>
+<body>
+
+<nav id="navbar" class="scrolled">
+  <a class="nav-logo" href="index.html">
+    <svg class="nav-logo-svg" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="38" height="38" rx="8" fill="url(#lg)"/>
+      <rect x="8" y="9" width="22" height="3" rx="1.5" fill="#0B1F3A"/>
+      <rect x="8" y="14" width="22" height="14" rx="2" fill="#0B1F3A" opacity="0.85"/>
+      <rect x="11" y="17" width="10" height="2" rx="1" fill="#C9A84C"/>
+      <rect x="11" y="21" width="7" height="2" rx="1" fill="#C9A84C" opacity="0.6"/>
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#C9A84C"/><stop offset="1" stop-color="#E4B040"/>
+      </linearGradient></defs>
+    </svg>
+    <span class="nav-logo-text">Sham<span>bhu</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMobile()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMobile()">✕</button>
+  <a href="index.html" onclick="toggleMobile()">Home</a>
+  <a href="products.html" onclick="toggleMobile()">Products</a>
+  <a href="contact.html" onclick="toggleMobile()">Contact</a>
+</div>
+
+<header class="portal-header">
+  <div class="wholesale-badge">Authorised Distributor Portal</div>
+  <h1 class="portal-title" id="welcomeText">Welcome back, Partner</h1>
+  <p style="color:rgba(255,255,255,0.6); max-width:600px; margin-top:12px;">Browse our complete catalog with exclusive wholesale pricing. All orders placed through this portal are prioritized for dispatch.</p>
+</header>
+
+<section style="padding: 40px 6%;">
+  <div class="filter-bar reveal" style="margin-bottom:40px;">
+    <div class="filter-tabs">
+      <button class="filter-tab active">All</button>
+      <button class="filter-tab">Box Files</button>
+      <button class="filter-tab">Ring Binders</button>
+      <button class="filter-tab">Spring Files</button>
+      <button class="filter-tab">Folders</button>
+      <button class="filter-tab">Eco Folders</button>
+    </div>
+  </div>
+
+  <div class="products-grid reveal" id="productsGrid">
+    <!-- JS injected -->
+  </div>
+</section>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal" style="max-width: 900px; padding: 0; overflow: hidden; background: var(--bg-card); display: flex; flex-direction: column;">
+    <button class="modal-close" onclick="closeModal()" style="z-index: 10; background: rgba(0,0,0,0.5); border-radius: 50%; width: 36px; height: 36px; top: 16px; right: 16px; color: white; display: flex; align-items: center; justify-content: center;">✕</button>
+    <div style="display: flex; flex-wrap: wrap; max-height: 90vh; overflow-y: auto;">
+      <!-- Left side: Images -->
+      <div style="flex: 1 1 400px; background: rgba(0,0,0,0.2); display: flex; flex-direction: column;">
+        <div style="width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px;">
+          <img id="pm_main_img" src="" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+        </div>
+        <div id="pm_gallery" style="display: flex; gap: 8px; padding: 16px; overflow-x: auto; background: rgba(0,0,0,0.3);">
+          <!-- JS populated thumbnails -->
+        </div>
+      </div>
+      
+      <!-- Right side: Details -->
+      <div style="flex: 1 1 350px; padding: 32px; display: flex; flex-direction: column; justify-content: center;">
+        <div class="product-cat" id="pm_cat" style="margin-bottom: 8px;">Category</div>
+        <h2 id="pm_name" style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 16px; color: var(--gold);">Product Name</h2>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+          <div id="pm_price" style="font-size: 1.5rem; font-weight: 600; color: white;">₹0</div>
+          <div id="pm_moq" style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem;">MOQ: 50</div>
+        </div>
+        <p id="pm_desc" style="color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 32px;">Description goes here...</p>
+        
+        <a id="pm_wa_link" href="#" target="_blank" class="btn-primary" style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 8px;">
+          <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+          Enquire on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const distData = localStorage.getItem('shambhu_dist_user');
+    if (distData) {
+      const dist = JSON.parse(distData);
+      document.getElementById('welcomeText').innerHTML = `Welcome back, <span style="color:var(--gold)">${dist.firm}</span>`;
+    }
+    
+  });
+
+  function portalOrder(item, price, moq) {
+    const dist = JSON.parse(localStorage.getItem('shambhu_dist_user'));
+    const msg = encodeURIComponent(`*Distributor Order Request*\n\nFirm: ${dist.firm}\nItem: ${item}\nWholesale Price: ${price}\nMOQ Required: ${moq}\n\nPlease confirm availability and total amount for ___ pieces.`);
+    window.open(`https://wa.me/${WA_NUM}?text=${msg}`, '_blank');
+  }
+</script>
+</body>
+</html>

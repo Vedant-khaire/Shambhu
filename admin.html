@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Shambhu — Premium Office Files</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/global.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<script>
+  // Protect page immediately
+  (function() {
+    const user = localStorage.getItem('shambhu_user');
+    const role = localStorage.getItem('shambhu_role');
+    const expiry = localStorage.getItem('shambhu_auth_expiry');
+    if (!user || (role !== 'owner' && role !== 'developer') || !expiry || new Date().getTime() > parseInt(expiry)) {
+      localStorage.removeItem('shambhu_user');
+      localStorage.removeItem('shambhu_role');
+      localStorage.removeItem('shambhu_auth_expiry');
+      window.location.href = 'distributor.html?auth=failed';
+    }
+  })();
+</script>
+<style>
+body { background: #071222; }
+.admin-layout { max-width: 1300px; margin: 0 auto; padding: 120px 4% 80px; }
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+.admin-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold-light); }
+.status-pill { background: rgba(37,211,102,0.15); color: #25D366; padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid rgba(37,211,102,0.3); }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; }
+.kpi-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 24px; border-radius: 16px; }
+.kpi-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+.kpi-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; }
+.panel { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 32px; overflow-x: auto; }
+.panel-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 24px; }
+.table { width: 100%; border-collapse: collapse; min-width: 700px; }
+.table th { text-align: left; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.table td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
+.badge-status { padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+.bg-warn { background: rgba(241,196,15,0.15); color: #F1C40F; border: 1px solid rgba(241,196,15,0.3); }
+.bg-good { background: rgba(46,204,113,0.15); color: #2ECC71; border: 1px solid rgba(46,204,113,0.3); }
+.bg-danger { background: rgba(231,76,60,0.15); color: #E74C3C; border: 1px solid rgba(231,76,60,0.3); }
+@media(max-width: 1024px){ .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width: 768px){ .kpi-grid { grid-template-columns: 1fr; } .admin-layout { padding-top: 100px; } }
+.admin-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; padding-bottom: 8px; }
+.admin-tab { background: transparent; border: none; color: rgba(255,255,255,0.5); padding: 12px 24px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; border-radius: 8px 8px 0 0; }
+.admin-tab:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+.admin-tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+.admin-tab-content { display: none; }
+.admin-tab-content.active { display: block; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<nav id="navbar" class="scrolled">
+  <a class="nav-logo" href="index.html">
+    <svg class="nav-logo-svg" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="38" height="38" rx="8" fill="url(#alg)"/>
+      <rect x="8" y="9" width="22" height="3" rx="1.5" fill="#0B1F3A"/>
+      <rect x="8" y="14" width="22" height="14" rx="2" fill="#0B1F3A" opacity="0.85"/>
+      <rect x="11" y="17" width="10" height="2" rx="1" fill="#C9A84C"/>
+      <rect x="11" y="21" width="7" height="2" rx="1" fill="#C9A84C" opacity="0.6"/>
+      <defs><linearGradient id="alg" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#C9A84C"/><stop offset="1" stop-color="#E4B040"/>
+      </linearGradient></defs>
+    </svg>
+    <span class="nav-logo-text">Sham<span>bhu</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><span style="color:rgba(255,255,255,0.4);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;">Admin Dashboard</span></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="stamp.html">Stamps</a></li>
+    <li><a href="distributor.html">Portal</a></li>
+    <li><a href="index.html" class="nav-cta">← Back to Site</a></li>
+  </ul>
+</nav>
+
+<section class="admin-layout">
+  <div class="admin-header">
+    <h1 class="admin-title reveal">Owner Dashboard</h1>
+    <span class="status-pill reveal">System Online</span>
+  </div>
+  
+  <div class="admin-tabs reveal">
+    <button class="admin-tab active" onclick="switchAdminTab('overview')">Overview</button>
+    <button class="admin-tab" onclick="switchAdminTab('products')">Products</button>
+    <button class="admin-tab" onclick="switchAdminTab('distributors')">Distributors</button>
+    <button class="admin-tab" onclick="switchAdminTab('stamps')">Stamp Orders</button>
+    <button class="admin-tab" onclick="switchAdminTab('developer')">Developer</button>
+  </div>
+
+  <div class="admin-tab-content active" id="admin-tab-overview">
+    <div class="kpi-grid">
+      <div class="kpi-card reveal reveal-delay-1">
+        <div class="kpi-label">Total Orders (This Month)</div>
+        <div class="kpi-val" style="color: var(--gold-light);">142</div>
+      </div>
+      <div class="kpi-card reveal reveal-delay-2">
+        <div class="kpi-label">Pending Registrations</div>
+        <div class="kpi-val" style="color: #E74C3C;" id="kpi-pending">0</div>
+      </div>
+      <div class="kpi-card reveal reveal-delay-3">
+        <div class="kpi-label">Active Distributors</div>
+        <div class="kpi-val" style="color: #3498DB;" id="kpi-approved">0</div>
+      </div>
+      <div class="kpi-card reveal reveal-delay-4">
+        <div class="kpi-label">Total Products</div>
+        <div class="kpi-val" style="color: #2ECC71;" id="kpi-products">0</div>
+      </div>
+    </div>
+    
+    <div class="panel reveal">
+      <h3 class="panel-title">Recent Orders (Demo Data)</h3>
+      <div style="overflow-x: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer / Firm Name</th>
+              <th>Order Type</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family: monospace; color: var(--gold);">SHB9921</td>
+              <td>Ramesh Trading Co.</td>
+              <td>Wholesale (Box Files)</td>
+              <td>₹14,500</td>
+              <td><span class="badge-status bg-warn">Processing</span></td>
+            </tr>
+            <tr>
+              <td style="font-family: monospace; color: var(--gold);">SHB9920</td>
+              <td>Adv. Suresh Deshmukh</td>
+              <td>Custom Pre-Ink Stamp</td>
+              <td>₹349</td>
+              <td><span class="badge-status bg-warn">Awaiting Design</span></td>
+            </tr>
+            <tr>
+              <td style="font-family: monospace; color: var(--gold);">SHB9919</td>
+              <td>Pune High School</td>
+              <td>Retail (Exam Pads)</td>
+              <td>₹3,750</td>
+              <td><span class="badge-status bg-good">Shipped</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-tab-content" id="admin-tab-products">
+    <div class="panel reveal">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <h3 class="panel-title" style="margin-bottom:0;">Product Management</h3>
+        <button onclick="document.getElementById('addProductForm').classList.toggle('hidden')" class="nav-cta" style="border:none; cursor:pointer;">+ Add New Product</button>
+      </div>
+      
+      <div id="addProductForm" class="hidden" style="background: rgba(0,0,0,0.2); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:24px;">
+        <form onsubmit="submitNewProduct(event)" class="form-group" style="gap:16px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div><label class="form-label">Name</label><input type="text" class="form-input" required id="np_name"></div>
+            <div><label class="form-label">Category</label><input type="text" class="form-input" required id="np_cat" placeholder="e.g. Box Files"></div>
+            <div><label class="form-label">Retail Price (₹)</label><input type="text" class="form-input" required id="np_price"></div>
+            <div><label class="form-label">Wholesale Price (₹)</label><input type="text" class="form-input" required id="np_wholesale"></div>
+            <div><label class="form-label">MOQ</label><input type="text" class="form-input" required id="np_moq" placeholder="e.g. 50 pcs"></div>
+            <div><label class="form-label">Visibility</label>
+              <select class="form-input" id="np_visibility">
+                <option value="all">All (Retail & Wholesale)</option>
+                <option value="retail">Retail Only</option>
+                <option value="wholesale">Wholesale Only</option>
+              </select>
+            </div>
+            <div style="grid-column: span 2;">
+              <label class="form-label">Product Image (Upload or Type Path)</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" class="form-input" id="np_icon" value="📦" placeholder="assets/images/image.jpg or Emoji" style="flex: 1;">
+                <input type="file" class="form-input" accept="image/png, image/jpeg, image/webp" onchange="encodeImageFileAsURL(this, 'np_icon')" style="flex: 1;">
+              </div>
+              <p style="font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 4px;">Type a path like <code>assets/images/file.jpg</code> OR upload a file directly.</p>
+            </div>
+            <div style="grid-column: span 2;">
+              <label class="form-label">Description</label>
+              <textarea class="form-input" id="np_desc" rows="3" placeholder="Enter product details..."></textarea>
+            </div>
+          </div>
+          <button type="submit" class="form-submit" style="width:auto; margin-top:8px;">Save Product</button>
+        </form>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product Image/Icon</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Visibility</th>
+              <th>Retail (₹)</th>
+              <th>Wholesale (₹)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminProductsList">
+            <!-- JS populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-tab-content" id="admin-tab-distributors">
+    <div class="panel reveal">
+      <h3 class="panel-title" style="color:#E74C3C;">Pending Requests</h3>
+      <div style="overflow-x: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Firm Name</th>
+              <th>Contact Person</th>
+              <th>Email</th>
+              <th>Phone / City</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminPendingList">
+            <!-- JS populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="panel reveal" style="margin-top:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <h3 class="panel-title" style="color:#2ECC71; margin-bottom:0;">Approved Distributors</h3>
+        <button onclick="document.getElementById('addDistributorForm').classList.toggle('hidden')" class="nav-cta" style="border:none; cursor:pointer;">+ Manually Add Distributor</button>
+      </div>
+
+      <div id="addDistributorForm" class="hidden" style="background: rgba(0,0,0,0.2); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:24px;">
+        <form onsubmit="submitManualDistributor(event)" class="form-group" style="gap:16px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div><label class="form-label">Firm Name</label><input type="text" class="form-input" required id="nd_firm"></div>
+            <div><label class="form-label">Contact Person</label><input type="text" class="form-input" required id="nd_person"></div>
+            <div><label class="form-label">Email</label><input type="email" class="form-input" required id="nd_email"></div>
+            <div><label class="form-label">Phone</label><input type="text" class="form-input" required id="nd_phone"></div>
+            <div><label class="form-label">City</label><input type="text" class="form-input" required id="nd_city"></div>
+            <div><label class="form-label">Assign Password</label><input type="text" class="form-input" required id="nd_password" placeholder="e.g. 123456"></div>
+          </div>
+          <button type="submit" class="form-submit" style="width:auto; margin-top:8px;">Add Distributor</button>
+        </form>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Firm Name</th>
+              <th>Contact Person</th>
+              <th>Email</th>
+              <th>Password (Code)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminApprovedList">
+            <!-- JS populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-tab-content" id="admin-tab-stamps">
+    <div class="panel reveal">
+      <h3 class="panel-title">Custom Stamp Orders</h3>
+      <p style="color:rgba(255,255,255,0.6); margin-bottom:20px;">Manage and track all custom stamp manufacturing requests here.</p>
+      <div style="overflow-x: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Info</th>
+              <th>Details</th>
+              <th>Design File</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="adminStampOrdersList">
+             <tr>
+              <td style="font-family: monospace; color: var(--gold);">STP1001</td>
+              <td>Rajesh Kumar <br><small>+91 9960950007</small></td>
+              <td>Medium (40x60mm) <br><small>Ink: Blue | Qty: 1</small></td>
+              <td><a href="#" style="color:#3498DB;">logo_final.pdf</a></td>
+              <td><span class="badge-status bg-warn">Awaiting Confirmation</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-tab-content" id="admin-tab-developer">
+    <div class="panel reveal">
+      <h3 class="panel-title">Developer Controls</h3>
+      <p style="color:rgba(255,255,255,0.6); margin-bottom:20px;">Raw system tools and local storage controls. Dangerous actions.</p>
+      
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <button onclick="if(confirm('Reset all products to default?')) { localStorage.removeItem('shambhu_products'); location.reload(); }" class="btn-secondary" style="border:1px solid #E74C3C; color:#E74C3C; background:transparent; padding:10px 20px; border-radius:6px; cursor:pointer;">Reset Products</button>
+        <button onclick="if(confirm('Delete all pending registrations?')) { localStorage.removeItem('shambhu_pending'); location.reload(); }" class="btn-secondary" style="border:1px solid #E74C3C; color:#E74C3C; background:transparent; padding:10px 20px; border-radius:6px; cursor:pointer;">Clear Pending</button>
+        <button onclick="if(confirm('Delete all approved distributors?')) { localStorage.removeItem('shambhu_approved'); location.reload(); }" class="btn-secondary" style="border:1px solid #E74C3C; color:#E74C3C; background:transparent; padding:10px 20px; border-radius:6px; cursor:pointer;">Clear Approved</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDIT PRODUCT MODAL -->
+<div class="modal-overlay" id="editProductModal">
+  <div class="modal" style="text-align:left; max-width:600px;">
+    <button class="modal-close" onclick="document.getElementById('editProductModal').classList.remove('open')">✕</button>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:16px;">Edit Product</h3>
+    <form onsubmit="saveEditedProduct(event)" class="form-group" style="gap:16px;">
+      <input type="hidden" id="ep_id">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div><label class="form-label">Name</label><input type="text" class="form-input" required id="ep_name"></div>
+        <div><label class="form-label">Category</label><input type="text" class="form-input" required id="ep_cat"></div>
+        <div><label class="form-label">Retail Price (₹)</label><input type="text" class="form-input" required id="ep_price"></div>
+        <div><label class="form-label">Wholesale Price (₹)</label><input type="text" class="form-input" required id="ep_wholesale"></div>
+        <div><label class="form-label">MOQ</label><input type="text" class="form-input" required id="ep_moq"></div>
+        <div><label class="form-label">Visibility</label>
+          <select class="form-input" id="ep_visibility">
+            <option value="all">All (Retail & Wholesale)</option>
+            <option value="retail">Retail Only</option>
+            <option value="wholesale">Wholesale Only</option>
+          </select>
+        </div>
+        <div style="grid-column: span 2;">
+          <label class="form-label">Product Image (Upload or Type Path)</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" class="form-input" id="ep_icon" placeholder="assets/images/image.jpg or Emoji" style="flex: 1;">
+            <input type="file" class="form-input" accept="image/png, image/jpeg, image/webp" onchange="encodeImageFileAsURL(this, 'ep_icon')" style="flex: 1;">
+          </div>
+        </div>
+        <div style="grid-column: span 2;">
+          <label class="form-label">Description</label>
+          <textarea class="form-input" id="ep_desc" rows="3" placeholder="Enter product details..."></textarea>
+        </div>
+      </div>
+      <button type="submit" class="form-submit" style="margin-top:16px;">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- GALLERY MANAGER MODAL -->
+<div class="modal-overlay" id="galleryModal">
+  <div class="modal" style="text-align:left; max-width:700px;">
+    <button class="modal-close" onclick="document.getElementById('galleryModal').classList.remove('open')">✕</button>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:16px;">Manage Gallery: <span id="gm_product_name" style="color:var(--gold);"></span></h3>
+    <input type="hidden" id="gm_product_id">
+    
+    <div style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.05);">
+      <label class="form-label" style="display:block; margin-bottom:8px;">Add New Photo</label>
+      <input type="file" class="form-input" accept="image/png, image/jpeg, image/webp" onchange="addGalleryImage(this)">
+      <p style="font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 4px;">Upload a file to add it to this product's gallery.</p>
+    </div>
+
+    <div id="gm_images_container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px;">
+      <!-- JS populated with existing gallery images -->
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script>
+  const _obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => _obs.observe(el));
+</script>
+</body>
+</html>

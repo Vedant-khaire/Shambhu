@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products | Shambhu — Premium Office Files</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/global.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<style>
+/* Products specific CSS */
+.filter-bar {
+  padding: 40px 6% 0;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.filter-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
+.filter-tab {
+  background: transparent; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 30px; padding: 8px 20px; font-size: 0.8rem;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6); cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.2s;
+}
+.filter-tab:hover, .filter-tab.active {
+  background: var(--gold); border-color: var(--gold);
+  color: var(--navy); font-weight: 700;
+}
+.products-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 32px; padding: 40px 6% 100px;
+}
+.product-card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.25,0.8,0.25,1);
+  position: relative; text-decoration: none; display: block; color: var(--white);
+}
+.product-card:hover {
+  transform: translateY(-8px); border-color: rgba(201,168,76,0.5);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.2);
+}
+.product-img-wrap {
+  height: 200px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  display: flex; align-items: center; justify-content: center;
+}
+.product-img-icon { font-size: 4.5rem; opacity: 0.8; transition: transform 0.5s; }
+.product-card:hover .product-img-icon { transform: scale(1.1); }
+.product-featured-badge {
+  position: absolute; top: 12px; left: 12px;
+  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  color: var(--white); border-radius: 20px; padding: 4px 14px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(227,30,36,0.3);
+}
+.product-info { padding: 24px; }
+.product-cat {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--gold); font-weight: 600; margin-bottom: 8px;
+}
+.product-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3;
+}
+.product-desc {
+  font-size: 0.85rem; color: rgba(255,255,255,0.5);
+  line-height: 1.6; margin-bottom: 20px;
+}
+.product-footer { display: flex; align-items: center; justify-content: space-between; }
+.product-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem; font-weight: 700; color: var(--gold-light);
+}
+.product-price small {
+  font-family: 'Inter', sans-serif; font-size: 0.75rem;
+  color: rgba(255,255,255,0.4); font-weight: 400; display: block;
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar" class="scrolled">
+  <a class="nav-logo" href="index.html">
+    <svg class="nav-logo-svg" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="38" height="38" rx="8" fill="url(#lg)"/>
+      <rect x="8" y="9" width="22" height="3" rx="1.5" fill="#0B1F3A"/>
+      <rect x="8" y="14" width="22" height="14" rx="2" fill="#0B1F3A" opacity="0.85"/>
+      <rect x="11" y="17" width="10" height="2" rx="1" fill="#C9A84C"/>
+      <rect x="11" y="21" width="7" height="2" rx="1" fill="#C9A84C" opacity="0.6"/>
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#C9A84C"/><stop offset="1" stop-color="#E4B040"/>
+      </linearGradient></defs>
+    </svg>
+    <span class="nav-logo-text">Sham<span>bhu</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="stamp.html">Custom Stamp</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="distributor.html" class="nav-cta">Distributor Login</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMobile()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMobile()">✕</button>
+  <a href="index.html" onclick="toggleMobile()">Home</a>
+  <a href="products.html" onclick="toggleMobile()">Products</a>
+  <a href="stamp.html" onclick="toggleMobile()">Custom Stamp</a>
+  <a href="distributor.html" onclick="toggleMobile()">Distributor</a>
+  <a href="about.html" onclick="toggleMobile()">About</a>
+  <a href="contact.html" onclick="toggleMobile()">Contact</a>
+  <a href="offers.html" onclick="toggleMobile()">Offers</a>
+</div>
+
+<header class="page-header" data-text="CATALOG">
+  <div class="page-header-label reveal">Our Collection</div>
+  <h1 class="reveal reveal-delay-1">Premium <span>Office</span> Stationery</h1>
+  <p class="reveal reveal-delay-2">Browse our full range of manufactured files, folders, and ring binders. Designed for durability and corporate elegance.</p>
+</header>
+
+<div class="filter-bar reveal">
+  <div class="filter-tabs">
+    <button class="filter-tab active">All</button>
+    <button class="filter-tab">Box Files</button>
+    <button class="filter-tab">Ring Binders</button>
+    <button class="filter-tab">Spring Files</button>
+    <button class="filter-tab">Eco Folders</button>
+  </div>
+  <div class="search-box" style="position:relative;">
+    <input type="text" placeholder="Search products..." style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:8px 16px 8px 36px;color:white;font-family:'Inter',sans-serif;outline:none;">
+    <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.5;">🔍</span>
+  </div>
+</div>
+
+<div class="products-grid reveal" id="productsGrid" style="min-height: 400px;">
+  <!-- JS populated -->
+</div>
+
+
+
+<a class="wa-float" href="https://wa.me/919960950007?text=Hi%20Shambhu%2C%20I%20want%20to%20enquire%20about%20your%20products!" target="_blank" title="Chat on WhatsApp" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal" style="max-width: 900px; padding: 0; overflow: hidden; background: var(--bg-card); display: flex; flex-direction: column;">
+    <button class="modal-close" onclick="closeModal()" style="z-index: 10; background: rgba(0,0,0,0.5); border-radius: 50%; width: 36px; height: 36px; top: 16px; right: 16px; color: white; display: flex; align-items: center; justify-content: center;">✕</button>
+    <div style="display: flex; flex-wrap: wrap; max-height: 90vh; overflow-y: auto;">
+      <!-- Left side: Images -->
+      <div style="flex: 1 1 400px; background: rgba(0,0,0,0.2); display: flex; flex-direction: column;">
+        <div style="width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px;">
+          <img id="pm_main_img" src="" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+        </div>
+        <div id="pm_gallery" style="display: flex; gap: 8px; padding: 16px; overflow-x: auto; background: rgba(0,0,0,0.3);">
+          <!-- JS populated thumbnails -->
+        </div>
+      </div>
+      
+      <!-- Right side: Details -->
+      <div style="flex: 1 1 350px; padding: 32px; display: flex; flex-direction: column; justify-content: center;">
+        <div class="product-cat" id="pm_cat" style="margin-bottom: 8px;">Category</div>
+        <h2 id="pm_name" style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 16px; color: var(--gold);">Product Name</h2>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+          <div id="pm_price" style="font-size: 1.5rem; font-weight: 600; color: white;">₹0</div>
+          <div id="pm_moq" style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem;">MOQ: 50</div>
+        </div>
+        <p id="pm_desc" style="color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 32px;">Description goes here...</p>
+        
+        <a id="pm_wa_link" href="#" target="_blank" class="btn-primary" style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 8px;">
+          <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+          Enquire on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Sham<span>bhu</span></div>
+      <div class="footer-tagline">We Secure Your Importance</div>
+      <div class="footer-desc">Khaire Industries — Premium office stationery manufacturer based in Narayangaon, Pune. Supplying quality files, folders &amp; custom stamps to offices, courts, schools and businesses across India.</div>
+      <div class="footer-contact">
+        <a href="tel:+919960950007">📞 +91 9960950007</a>
+        <a href="https://wa.me/919960950007" target="_blank">💬 WhatsApp Us</a>
+        <a href="mailto:khaireindustries@gmail.com">✉️ khaireindustries@gmail.com</a>
+        <a href="https://www.instagram.com/khaireindustries.shambhu" target="_blank">📸 @khaireindustries.shambhu</a>
+        <a href="#" style="cursor:default;pointer-events:none">📍 Pune Nashik Hwy, Narayangaon, Pune 410504</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <ul>
+        <li><a href="products.html">All Products</a></li>
+        <li><a href="products.html">Box Files</a></li>
+        <li><a href="products.html">Ring Binders</a></li>
+        <li><a href="products.html">Spring Files</a></li>
+        <li><a href="products.html">Eco Folders</a></li>
+        <li><a href="stamp.html">Custom Stamps</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="about.html">About Shambhu</a></li>
+        <li><a href="distributor.html">Distributor Portal</a></li>
+        <li><a href="offers.html">Current Offers</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="tracking.html">Order Tracking</a></li>
+        <li><a href="terms.html">Terms &amp; Privacy</a></li>
+        <li><a href="https://wa.me/919960950007" target="_blank">WhatsApp Support</a></li>
+        <li><a href="https://www.instagram.com/khaireindustries.shambhu" target="_blank">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Shambhu Files (Khaire Industries), Narayangaon, Pune, Maharashtra. All Rights Reserved.</p>
+    <p class="footer-gstin">GSTIN: 27GEZPK8310G1ZX</p>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    const n = document.getElementById('navbar');
+    if (n) n.classList.toggle('scrolled', window.scrollY > 40);
+  });
+  // Mobile menu
+  function toggleMobile() {
+    const m = document.getElementById('mobileMenu');
+    if (m) m.classList.toggle('open');
+  }
+  // Scroll reveal
+  const _obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => _obs.observe(el));
+</script>
+</body>
+</html>
